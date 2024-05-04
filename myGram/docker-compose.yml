@@ -1,0 +1,21 @@
+version: '3'
+services:
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  postgresql_db:
+    image: postgres:16.0
+    environment:
+      POSTGRES_DB: "myProject"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - "5433:5432"
+
+  redis:
+    image: redis:7.0.12
+    ports:
+      - "6379:6379"
