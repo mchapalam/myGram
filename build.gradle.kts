@@ -27,6 +27,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	compileOnly("org.projectlombok:lombok")
 	implementation("redis.clients:jedis")
 	implementation("io.jsonwebtoken:jjwt:0.9.1")

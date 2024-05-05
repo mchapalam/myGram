@@ -1,12 +1,12 @@
 spring:
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
-  jpa:
-    generate-ddl: true
+#  jpa:
+#    generate-ddl: true
   datasource:
-    url: jdbc:postgresql://localhost:5433/myProject
+    url: jdbc:postgresql://psql-db:5432/myProject
     username: postgres
     password: admin
     hikari:
@@ -14,8 +14,10 @@ spring:
       connection-init-sql: CREATE SCHEMA IF NOT EXISTS myproject_schema
       connection-timeout: 10000
 
-server:
-  port: 8070
+  docker:
+    compose:
+      enabled: true
+
 
 app:
   jwt:

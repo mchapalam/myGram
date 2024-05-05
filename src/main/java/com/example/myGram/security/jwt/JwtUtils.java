@@ -15,7 +15,7 @@ public class JwtUtils {
     private String jwtSecret;
 
     @Value("${app.jwt.refreshTokenExpiration}")
-    private Duration tokenExpiration;
+    private Duration tokenExpiration ;
 
     public String generateTokenFromUsername(String username){
         return Jwts.builder()

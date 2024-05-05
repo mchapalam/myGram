@@ -2,6 +2,7 @@ package com.example.myGram.security;
 
 import com.example.myGram.exception.RefreshTokenException;
 import com.example.myGram.model.entity.RefreshToken;
+import com.example.myGram.model.entity.RoleType;
 import com.example.myGram.model.entity.User;
 import com.example.myGram.repository.UserRepository;
 import com.example.myGram.security.jwt.JwtUtils;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Security;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -65,7 +67,7 @@ public class SecurityService {
                 .email(createUserRequest.getEmail())
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .build();
-        user.setRoles(createUserRequest.getRoles());
+        user.setRoles(Collections.singleton(RoleType.ROLE_USER));
 
         userRepository.save(user);
     }
