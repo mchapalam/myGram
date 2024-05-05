@@ -9,10 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -24,13 +21,17 @@ public class AuthController {
 
     private final SecurityService securityService;
 
+    @CrossOrigin
     @PostMapping("/sigin")
     public ResponseEntity<AuthResponse> authUser(@RequestBody LoginRequest loginRequest){
+        log.info("Call sigin api");
         return ResponseEntity.ok(securityService.authUser(loginRequest));
     }
 
+    @CrossOrigin
     @PostMapping("/register")
     public ResponseEntity<SimpleResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
+        log.info("Call register api");
         if (userRepository.existsByUsername(createUserRequest.getUsername()))
             throw new AlreadyExitsException("Username valid");
 
@@ -42,13 +43,17 @@ public class AuthController {
         return ResponseEntity.ok(new SimpleResponse("User created"));
     }
 
+    @CrossOrigin
     @PostMapping("/refresh-token")
     public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request){
+        log.info("Call refresh-token api");
         return ResponseEntity.ok(securityService.tokenRefresh(request));
     }
 
+    @CrossOrigin
     @PostMapping("/logout")
     public ResponseEntity<SimpleResponse> logoutUser(@AuthenticationPrincipal UserDetails userDetails){
+        log.info("Call logout api");
         securityService.logout();
 
         return ResponseEntity.ok(new SimpleResponse("User logout. Username is: " + userDetails.getUsername()));
