@@ -3,6 +3,7 @@ package com.example.myGram.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -25,6 +26,20 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "first_name")
+    private String firstName;
+    private Short age;
+    private String avatar;
+    private String city;
+    private String country;
+    private String status;
+
+    @Column(name = "create_at")
+    private Instant createAt;
+    @Column(name = "online_at")
+    private Instant onlineAt;
 
     @ElementCollection(targetClass = RoleType.class, fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))

@@ -22,7 +22,7 @@ public class AuthController {
     private final SecurityService securityService;
 
     @CrossOrigin
-    @PostMapping("/sigin")
+    @PostMapping("/signin")
     public ResponseEntity<AuthResponse> authUser(@RequestBody LoginRequest loginRequest){
         log.info("Call sigin api");
         return ResponseEntity.ok(securityService.authUser(loginRequest));
@@ -33,10 +33,10 @@ public class AuthController {
     public ResponseEntity<SimpleResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
         log.info("Call register api");
         if (userRepository.existsByUsername(createUserRequest.getUsername()))
-            throw new AlreadyExitsException("Username valid");
+            throw new AlreadyExitsException("Username invalid");
 
         if (userRepository.existsByUsername(createUserRequest.getEmail()))
-            throw new AlreadyExitsException("Email valid");
+            throw new AlreadyExitsException("Email invalid");
 
         securityService.register(createUserRequest);
 
