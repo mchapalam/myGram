@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -47,4 +45,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Set<RoleType> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> postList = new ArrayList<>();
 }

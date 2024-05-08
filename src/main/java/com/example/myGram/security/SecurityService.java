@@ -1,12 +1,14 @@
 package com.example.myGram.security;
 
 import com.example.myGram.exception.RefreshTokenException;
+import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.model.entity.RefreshToken;
 import com.example.myGram.model.entity.RoleType;
 import com.example.myGram.model.entity.User;
 import com.example.myGram.repository.UserRepository;
 import com.example.myGram.security.jwt.JwtUtils;
 import com.example.myGram.service.RefreshTokenService;
+import com.example.myGram.web.mapper.UserMapper;
 import com.example.myGram.web.model.*;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Security;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +36,8 @@ public class SecurityService {
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final UserMapper userMapper;
 
     public AuthResponse authUser(LoginRequest loginRequest){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -61,15 +66,21 @@ public class SecurityService {
     }
 
 
-    public void register(CreateUserRequest createUserRequest){
+    public UserResponse register(CreateUserRequest createUserRequest){
         var user = User.builder()
                 .username(createUserRequest.getUsername())
                 .email(createUserRequest.getEmail())
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .build();
         user.setRoles(Collections.singleton(RoleType.ROLE_USER));
+        user.setCreateAt(Instant.now());
 
         userRepository.save(user);
+
+        UserResponse userResponse = userMapper.userToResponse(user.getUsername());
+        userResponse.setToken(jwtUtils.generateTokenFromUsername(userResponse.getUserName()));
+
+        return userResponse;
     }
 
     public RefreshTokenResponse tokenRefresh (RefreshTokenRequest request){

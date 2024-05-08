@@ -20,6 +20,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String title;
     @Column(name = "date_create")
     private Instant dateCreate;
     @Column(name = "date_update")
@@ -31,7 +32,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @JoinColumn(name = "user_id")
     private User user;
 
 }

@@ -1,6 +1,7 @@
 package com.example.myGram.web.controller;
 
 import com.example.myGram.exception.AlreadyExitsException;
+import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.repository.UserRepository;
 import com.example.myGram.security.SecurityService;
 import com.example.myGram.web.model.*;
@@ -30,7 +31,7 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("/register")
-    public ResponseEntity<SimpleResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
+    public ResponseEntity<UserResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
         log.info("Call register api");
         if (userRepository.existsByUsername(createUserRequest.getUsername()))
             throw new AlreadyExitsException("Username invalid");
@@ -38,9 +39,7 @@ public class AuthController {
         if (userRepository.existsByUsername(createUserRequest.getEmail()))
             throw new AlreadyExitsException("Email invalid");
 
-        securityService.register(createUserRequest);
-
-        return ResponseEntity.ok(new SimpleResponse("User created"));
+        return ResponseEntity.ok(securityService.register(createUserRequest));
     }
 
     @CrossOrigin
