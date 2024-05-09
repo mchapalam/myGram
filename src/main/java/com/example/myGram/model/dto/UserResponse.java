@@ -15,7 +15,6 @@ public class UserResponse {
 
     private UUID id;
     private String userName;
-    private String password;
     private String email;
     private String lastName;
     private String firstName;
@@ -24,8 +23,6 @@ public class UserResponse {
     private String city;
     private String country;
     private String status;
-
-    private String token;
 
     private Instant createAt;
     private Instant onlineAt;

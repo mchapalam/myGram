@@ -26,5 +26,5 @@ public class PostResponse {
 
     private List<Comment> comments = new ArrayList<>();
 
-    private UUID userId;
+    private String username;
 }

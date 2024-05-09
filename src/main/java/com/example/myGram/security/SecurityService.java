@@ -78,7 +78,7 @@ public class SecurityService {
         userRepository.save(user);
 
         UserResponse userResponse = userMapper.userToResponse(user.getUsername());
-        userResponse.setToken(jwtUtils.generateTokenFromUsername(userResponse.getUserName()));
+
 
         return userResponse;
     }

@@ -35,7 +35,8 @@ public class PostMapper {
         postResponse.setTitle(post.getTitle());
         postResponse.setFile(post.getFile());
         postResponse.setDateCreate(post.getDateCreate());
-        postResponse.setUserId(post.getUser().getId());
+        postResponse.setUsername(post.getUser().getUsername());
+
         return postResponse;
     }
 

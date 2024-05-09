@@ -2,8 +2,10 @@ package com.example.myGram.web.controller;
 
 import com.example.myGram.model.dto.PostResponse;
 import com.example.myGram.model.dto.UpsertPostRequest;
+import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.security.AppUserDetails;
 import com.example.myGram.service.PostService;
+import com.example.myGram.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class AppController {
     private final PostService postService;
-
+    private final UserService userService;
 
     @CrossOrigin
     @GetMapping("/all")
@@ -42,7 +44,7 @@ public class AppController {
     }
 
     @CrossOrigin
-    @PostMapping("/user_create_post")
+    @PostMapping("/user/create_post")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public PostResponse createPost(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertPostRequest upsertPostRequest){
         log.info("Calling create post");
@@ -53,11 +55,20 @@ public class AppController {
     }
 
     @CrossOrigin
-    @GetMapping("/user_all_user_post")
+    @GetMapping("/user/all_users_post")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public List<PostResponse> findByAllUserPost(@AuthenticationPrincipal AppUserDetails userDetails){
         log.info("Calling all post");
 
         return postService.findAll();
+    }
+
+    @CrossOrigin
+    @GetMapping("/user/all_users")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
+    public List<UserResponse> findByAllUsers(@AuthenticationPrincipal AppUserDetails userDetails){
+        log.info("Calling all users");
+
+        return userService.findAllUsers();
     }
 }
