@@ -18,6 +18,11 @@ spring:
     compose:
       enabled: true
 
+server:
+  forward-headers-strategy: framework
+
+springdoc:
+  show-login-endpoint: true
 
 app:
   jwt:

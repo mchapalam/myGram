@@ -40,7 +40,7 @@ public class AppController {
     @GetMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public String userAccess(@AuthenticationPrincipal UserDetails userDetails){
-        return "User response data" + userDetails.getUsername();
+        return "User response data " + userDetails.getUsername();
     }
 
     @CrossOrigin
