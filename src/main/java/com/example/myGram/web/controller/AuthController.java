@@ -1,9 +1,13 @@
 package com.example.myGram.web.controller;
 
 import com.example.myGram.exception.AlreadyExitsException;
+import com.example.myGram.model.dto.UserForPostResponse;
 import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.repository.UserRepository;
+import com.example.myGram.security.AppUserDetails;
 import com.example.myGram.security.SecurityService;
+import com.example.myGram.service.UserService;
+import com.example.myGram.web.mapper.UserMapper;
 import com.example.myGram.web.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserRepository userRepository;
-
+    private final UserService  userService;
+    private final UserMapper userMapper;
     private final SecurityService securityService;
 
     @CrossOrigin
@@ -47,6 +52,12 @@ public class AuthController {
     public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request){
         log.info("Call refresh-token api");
         return ResponseEntity.ok(securityService.tokenRefresh(request));
+    }
+
+    @CrossOrigin
+    @GetMapping("/checkAuth")
+    public ResponseEntity<UserForPostResponse> refreshToken(@AuthenticationPrincipal AppUserDetails appUserDetails){
+        return ResponseEntity.ok(userService.findUserByUsername(appUserDetails.getUsername()));
     }
 
     @CrossOrigin

@@ -1,9 +1,6 @@
 package com.example.myGram.web.controller;
 
-import com.example.myGram.model.dto.PostResponse;
-import com.example.myGram.model.dto.UpsertPostRequest;
-import com.example.myGram.model.dto.UpsertUserRequest;
-import com.example.myGram.model.dto.UserResponse;
+import com.example.myGram.model.dto.*;
 import com.example.myGram.security.AppUserDetails;
 import com.example.myGram.service.PostService;
 import com.example.myGram.service.UserService;
@@ -27,7 +24,7 @@ public class AppController {
     @CrossOrigin
     @PostMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public UserResponse userAccess(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertUserRequest userRequest){
+    public UserForPostResponse userAccess(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertUserRequest userRequest){
         log.info("Call user {}", userRequest.getUsername());
         return userService.findUserByUsername(userRequest.getUsername());
     }

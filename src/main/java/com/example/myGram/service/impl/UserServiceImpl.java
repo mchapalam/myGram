@@ -1,5 +1,6 @@
 package com.example.myGram.service.impl;
 
+import com.example.myGram.model.dto.UserForPostResponse;
 import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.repository.PostRepository;
 import com.example.myGram.repository.UserRepository;
@@ -24,10 +25,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse findUserByUsername(String username) {
-        UserResponse userResponse = userMapper.userToResponse(userRepository.findByUsername(username).get());
+    public UserForPostResponse findUserByUsername(String username) {
+        UserForPostResponse userResponse = userMapper.userToUserForPostResponse(userRepository.findByUsername(username).get());
 
-        userResponse.setPost(postMapper.postListToResponseList(postRepository
+        userResponse.setPosts(postMapper.postListToResponseList(postRepository
                         .getPostByUsername(userResponse.getId())));
 
         return userResponse;
