@@ -1,6 +1,7 @@
 package com.example.myGram.web.mapper;
 
 import com.example.myGram.model.dto.PostResponse;
+import com.example.myGram.model.dto.UserForPostResponse;
 import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.model.entity.Post;
 import com.example.myGram.model.entity.User;
@@ -35,6 +36,15 @@ public class UserMapper {
         userResponse.setStatus(userTemp.getStatus());
         userResponse.setCreateAt(userTemp.getCreateAt());
         userResponse.setAvatar(userTemp.getAvatar());
+
+        return userResponse;
+    }
+
+    public UserForPostResponse userToUserForPostResponse(User user){
+        UserForPostResponse userResponse = new UserForPostResponse();
+
+        userResponse.setUsername(user.getUsername());
+        userResponse.setAvatar(user.getAvatar());
 
         return userResponse;
     }

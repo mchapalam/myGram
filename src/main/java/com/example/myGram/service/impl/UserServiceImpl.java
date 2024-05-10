@@ -19,4 +19,9 @@ public class UserServiceImpl implements UserService {
     public List<UserResponse> findAllUsers(){
         return userMapper.postListToResponseList(userRepository.findAll());
     }
+
+    @Override
+    public UserResponse findUserByUsername(String username) {
+        return userMapper.userToResponse(userRepository.findByUsername(username).get());
+    }
 }

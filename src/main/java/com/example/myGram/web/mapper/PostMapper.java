@@ -17,6 +17,8 @@ public class PostMapper {
 
     private final UserRepository userRepository;
 
+    private final UserMapper userMapper;
+
     public Post requestToPost(UpsertPostRequest upsertPostRequest){
         Post post = new Post();
 
@@ -35,7 +37,6 @@ public class PostMapper {
         postResponse.setTitle(post.getTitle());
         postResponse.setFile(post.getFile());
         postResponse.setDateCreate(post.getDateCreate());
-        postResponse.setUsername(post.getUser().getUsername());
 
         return postResponse;
     }

@@ -2,6 +2,7 @@ package com.example.myGram.web.controller;
 
 import com.example.myGram.model.dto.PostResponse;
 import com.example.myGram.model.dto.UpsertPostRequest;
+import com.example.myGram.model.dto.UpsertUserRequest;
 import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.security.AppUserDetails;
 import com.example.myGram.service.PostService;
@@ -37,14 +38,15 @@ public class AppController {
     }
 
     @CrossOrigin
-    @GetMapping("/user")
+    @PostMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public String userAccess(@AuthenticationPrincipal UserDetails userDetails){
-        return "User response data " + userDetails.getUsername();
+    public UserResponse userAccess(@RequestBody UpsertUserRequest userRequest){
+        log.info("Call user {}", userRequest.getUsername());
+        return userService.findUserByUsername(userRequest.getUsername());
     }
 
     @CrossOrigin
-    @PostMapping("/user/create_post")
+    @PostMapping("/create_post")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public PostResponse createPost(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertPostRequest upsertPostRequest){
         log.info("Calling create post");
@@ -55,7 +57,7 @@ public class AppController {
     }
 
     @CrossOrigin
-    @GetMapping("/user/all_users_post")
+    @GetMapping("/all_users_post")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public List<PostResponse> findByAllUserPost(@AuthenticationPrincipal AppUserDetails userDetails){
         log.info("Calling all post");
@@ -64,11 +66,22 @@ public class AppController {
     }
 
     @CrossOrigin
-    @GetMapping("/user/all_users")
+    @GetMapping("/all_users")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public List<UserResponse> findByAllUsers(@AuthenticationPrincipal AppUserDetails userDetails){
         log.info("Calling all users");
 
         return userService.findAllUsers();
     }
+
+
+    @CrossOrigin
+    @PostMapping("/user_all_posts")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
+    public List<PostResponse> findPostsByUser(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertUserRequest userRequest){
+        log.info("Calling findPostsByUser {}", userRequest.getUsername());
+
+        return postService.findPostsByUser(userRequest.getUsername());
+    }
 }
+

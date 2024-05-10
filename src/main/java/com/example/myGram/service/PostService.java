@@ -10,4 +10,6 @@ public interface PostService{
     List<PostResponse> findAll();
 
     PostResponse create(UpsertPostRequest post);
+
+    List<PostResponse> findPostsByUser(String username);
 }

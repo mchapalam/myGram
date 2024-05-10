@@ -32,7 +32,7 @@ public class Post {
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "username")
     private User user;
 
 }

@@ -23,8 +23,4 @@ public class PostResponse {
     private Instant dateUpdate;
 
     private String file;
-
-    private List<Comment> comments = new ArrayList<>();
-
-    private String username;
 }

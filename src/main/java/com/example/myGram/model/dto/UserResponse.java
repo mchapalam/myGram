@@ -26,4 +26,5 @@ public class UserResponse {
 
     private Instant createAt;
     private Instant onlineAt;
+
 }
