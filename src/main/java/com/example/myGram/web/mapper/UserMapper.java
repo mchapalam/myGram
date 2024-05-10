@@ -5,6 +5,7 @@ import com.example.myGram.model.dto.UserForPostResponse;
 import com.example.myGram.model.dto.UserResponse;
 import com.example.myGram.model.entity.Post;
 import com.example.myGram.model.entity.User;
+import com.example.myGram.repository.PostRepository;
 import com.example.myGram.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     public UserResponse userToResponse(String username){
         UserResponse userResponse = new UserResponse();

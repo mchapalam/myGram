@@ -76,9 +76,7 @@ public class SecurityService {
         user.setCreateAt(Instant.now());
 
         userRepository.save(user);
-
         UserResponse userResponse = userMapper.userToResponse(user.getUsername());
-
 
         return userResponse;
     }

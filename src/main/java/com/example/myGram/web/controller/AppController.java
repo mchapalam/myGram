@@ -25,22 +25,9 @@ public class AppController {
     private final UserService userService;
 
     @CrossOrigin
-    @GetMapping("/all")
-    public String allAccess(){
-        return "Public response data";
-    }
-
-    @CrossOrigin
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String adminAccess(){
-        return "Admin response data";
-    }
-
-    @CrossOrigin
     @PostMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public UserResponse userAccess(@RequestBody UpsertUserRequest userRequest){
+    public UserResponse userAccess(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertUserRequest userRequest){
         log.info("Call user {}", userRequest.getUsername());
         return userService.findUserByUsername(userRequest.getUsername());
     }
