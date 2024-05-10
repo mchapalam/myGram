@@ -44,6 +44,8 @@ public class AuthController {
         if (userRepository.existsByUsername(createUserRequest.getEmail()))
             throw new AlreadyExitsException("Email invalid");
 
+        securityService.register(createUserRequest);
+
         LoginRequest loginRequest = new LoginRequest(createUserRequest.getUsername(), createUserRequest.getPassword());
 
         return ResponseEntity.ok(securityService.authUser(loginRequest));
