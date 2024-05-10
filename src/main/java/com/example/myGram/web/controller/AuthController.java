@@ -36,7 +36,7 @@ public class AuthController {
 
     @CrossOrigin
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
+    public ResponseEntity<AuthResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
         log.info("Call register api");
         if (userRepository.existsByUsername(createUserRequest.getUsername()))
             throw new AlreadyExitsException("Username invalid");
@@ -44,7 +44,9 @@ public class AuthController {
         if (userRepository.existsByUsername(createUserRequest.getEmail()))
             throw new AlreadyExitsException("Email invalid");
 
-        return ResponseEntity.ok(securityService.register(createUserRequest));
+        LoginRequest loginRequest = new LoginRequest(createUserRequest.getUsername(), createUserRequest.getPassword());
+
+        return ResponseEntity.ok(securityService.authUser(loginRequest));
     }
 
     @CrossOrigin
