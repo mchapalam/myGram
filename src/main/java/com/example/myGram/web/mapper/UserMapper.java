@@ -45,6 +45,7 @@ public class UserMapper {
     public UserForPostResponse userToUserForPostResponse(User user){
         UserForPostResponse userResponse = new UserForPostResponse();
 
+        userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
         userResponse.setAvatar(user.getAvatar());
 
