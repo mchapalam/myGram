@@ -97,20 +97,7 @@ public class AppController {
                                               @PathVariable UUID userId) throws IOException{
         log.info("Calling findPostsByUser {}", userId);
 
-        List<PostResponse> postResponses = postService.findPostsByUserId(userId)
-                .stream()
-                .map(post -> {
-                    try {
-                        post.setBase64ImageData(postService.getImageData(post.getFile()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    return post;
-                })
-                .collect(Collectors.toList());
-
-        return postResponses;
+        return postService.findPostsByUserId(userId);
     }
 }
 

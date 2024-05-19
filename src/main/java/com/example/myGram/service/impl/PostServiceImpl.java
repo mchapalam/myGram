@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +37,20 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponse> findAll() {
-        return postMapper.postListToResponseList(postRepository.findAll());
+        List<PostResponse> postResponses = postMapper.postListToResponseList(postRepository.findAll())
+                .stream()
+                .map(post -> {
+                    try {
+                        post.setBase64ImageData(getImageData(post.getFile()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return post;
+                })
+                .collect(Collectors.toList());
+
+        return postResponses;
     }
 
     @Override
@@ -70,12 +84,39 @@ public class PostServiceImpl implements PostService {
     public List<PostResponse> findPostsByUser(String username) {
         UUID userId = userRepository.findByUsername(username).get().getId();
 
-        return postMapper.postListToResponseList(postRepository.getPostByUsername(userId));
+        List<PostResponse> postResponses = postMapper.postListToResponseList(postRepository.getPostByUsername(userId))
+                .stream()
+                .map(post -> {
+                    try {
+                        post.setBase64ImageData(getImageData(post.getFile()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return post;
+                })
+                .collect(Collectors.toList());
+
+        return postResponses;
     }
 
     @Override
     public List<PostResponse> findPostsByUserId(UUID id) {
-        return postMapper.postListToResponseList(postRepository.getPostByUsername(id));
+
+        List<PostResponse> postResponses = postMapper.postListToResponseList(postRepository.getPostByUsername(id))
+                .stream()
+                .map(post -> {
+                    try {
+                        post.setBase64ImageData(getImageData(post.getFile()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return post;
+                })
+                .collect(Collectors.toList());
+
+        return postResponses;
     }
 
     @Override
