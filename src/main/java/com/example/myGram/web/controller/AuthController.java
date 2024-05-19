@@ -29,7 +29,7 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> authUser(@RequestBody LoginRequest loginRequest){
-        log.info("Call sigin api");
+        log.info("Call signin api");
         return ResponseEntity.ok(securityService.authUser(loginRequest));
     }
 
