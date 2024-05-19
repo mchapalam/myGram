@@ -4,20 +4,33 @@ import com.example.myGram.model.dto.*;
 import com.example.myGram.security.AppUserDetails;
 import com.example.myGram.service.PostService;
 import com.example.myGram.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/app")
 @RequiredArgsConstructor
 @Slf4j
 public class AppController {
+
+    private final Jackson2ObjectMapperBuilder mapperBuilder;
     private final PostService postService;
     private final UserService userService;
 
@@ -32,12 +45,13 @@ public class AppController {
     @CrossOrigin
     @PostMapping("/create_post")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public PostResponse createPost(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertPostRequest upsertPostRequest){
+    public PostResponse createPost(@AuthenticationPrincipal AppUserDetails userDetails,
+                                   @ModelAttribute UpsertPostRequest upsertPostRequest,
+                                   @RequestParam("file")MultipartFile file) throws IOException {
         log.info("Calling create post");
+        upsertPostRequest.setUserID(userDetails.getId());
 
-        upsertPostRequest.setUserId(userDetails.getId());
-
-        return postService.create(upsertPostRequest);
+        return postService.create(upsertPostRequest, file);
     }
 
     @CrossOrigin
@@ -47,6 +61,22 @@ public class AppController {
         log.info("Calling all post");
 
         return postService.findAll();
+    }
+
+    @CrossOrigin
+    @GetMapping("/post/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
+    public ResponseEntity<Object> findPostById(@AuthenticationPrincipal AppUserDetails userDetails,
+                                               @PathVariable UUID id) throws IOException {
+        log.info("Calling post by id");
+
+        PostResponse postResponse = postService.findPostById(id);
+
+        String base64ImageData = postService.getImageData(postResponse.getFile());
+
+        postResponse.setBase64ImageData(base64ImageData);
+
+        return new ResponseEntity<>(postResponse, HttpStatus.OK);
     }
 
     @CrossOrigin

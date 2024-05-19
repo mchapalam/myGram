@@ -22,5 +22,7 @@ public class PostResponse {
     private Instant dateCreate;
     private Instant dateUpdate;
 
+    private String base64ImageData;
+
     private String file;
 }

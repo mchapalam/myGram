@@ -22,6 +22,7 @@ repositories {
 }
 
 dependencies {
+	implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.4")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")

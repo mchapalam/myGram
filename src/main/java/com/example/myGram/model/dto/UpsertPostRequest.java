@@ -14,11 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpsertPostRequest {
+
     private String title;
-    private Instant dateCreate;
-    private Instant dateUpdate;
-
-    private String file;
-
-    private UUID userId;
+    private UUID userID;
 }

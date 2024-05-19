@@ -24,8 +24,7 @@ public class PostMapper {
 
         post.setTitle(upsertPostRequest.getTitle());
         post.setDateCreate(Instant.now());
-        post.setFile(upsertPostRequest.getFile());
-        post.setUser(userRepository.findById(upsertPostRequest.getUserId()).get());
+        post.setUser(userRepository.findById(upsertPostRequest.getUserID()).get());
 
         return post;
     }
