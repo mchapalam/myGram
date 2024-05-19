@@ -3,7 +3,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: ../Diplom/Dockerfile
+      dockerfile: Dockerfile
     depends_on:
       - psql-db
       - redis
