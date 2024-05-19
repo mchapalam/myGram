@@ -77,6 +77,14 @@ public class PostServiceImpl implements PostService {
             tempPost.setFile(resultFilename);
         }
 
+        PostResponse postResponse = postMapper.postToResponse(postRepository.save(tempPost));
+
+        try {
+            postResponse.setBase64ImageData(getImageData(tempPost.getFile()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         return postMapper.postToResponse(postRepository.save(tempPost));
     }
 
