@@ -33,7 +33,6 @@ public class AppController {
     private final PostService postService;
     private final UserService userService;
 
-    @CrossOrigin
     @PostMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public UserForPostResponse userAccess(@AuthenticationPrincipal AppUserDetails userDetails,
@@ -42,7 +41,6 @@ public class AppController {
         return userService.findUserByUsername(userRequest.getUsername());
     }
 
-    @CrossOrigin
     @PostMapping("/create_post")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public PostResponse createPost(@AuthenticationPrincipal AppUserDetails userDetails,
@@ -54,7 +52,6 @@ public class AppController {
         return postService.create(upsertPostRequest, file);
     }
 
-    @CrossOrigin
     @GetMapping("/all_users_post")
     public List<PostResponse> findByAllUserPost(){
         log.info("Calling all post");
@@ -62,7 +59,6 @@ public class AppController {
         return postService.findAll();
     }
 
-    @CrossOrigin
     @GetMapping("/post/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public PostResponse findPostById(@AuthenticationPrincipal AppUserDetails userDetails,
@@ -72,7 +68,6 @@ public class AppController {
         return postService.findPostById(id);
     }
 
-    @CrossOrigin
     @GetMapping("/all_users")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public List<UserResponse> findByAllUsers(@AuthenticationPrincipal AppUserDetails userDetails){
@@ -81,8 +76,6 @@ public class AppController {
         return userService.findAllUsers();
     }
 
-
-    @CrossOrigin
     @GetMapping("/user_all_posts/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
     public List<PostResponse> findPostsByUser(@AuthenticationPrincipal AppUserDetails userDetails,
