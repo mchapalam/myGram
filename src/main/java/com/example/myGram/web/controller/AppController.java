@@ -97,7 +97,7 @@ public class AppController {
                                               @PathVariable UUID userId) throws IOException{
         log.info("Calling findPostsByUser {}", userId);
 
-        List<PostResponse> postResponses = postService.findPostsByUser(userId.toString())
+        List<PostResponse> postResponses = postService.findPostsByUserId(userId)
                 .stream()
                 .map(post -> {
                     try {

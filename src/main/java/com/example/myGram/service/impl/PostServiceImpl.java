@@ -74,6 +74,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<PostResponse> findPostsByUserId(UUID id) {
+        return postMapper.postListToResponseList(postRepository.getPostByUsername(id));
+    }
+
+    @Override
     public PostResponse findPostById(UUID id) {
         return postRepository.findById(id)
                 .map(postMapper::postToResponse).get();
@@ -81,10 +86,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public String getImageData(String fileName) throws IOException {
         Resource resource = new FileSystemResource(uploadPath + "/" + fileName);
-        InputStream inputStream = resource.getInputStream();
 
-        String base64ImageData = Base64.getEncoder().encodeToString(StreamUtils.copyToByteArray(inputStream));
+        if (!resource.exists()) {
+            return null;
+        }
 
-        return base64ImageData;
+        try (InputStream inputStream = resource.getInputStream()) {
+            byte[] imageData = StreamUtils.copyToByteArray(inputStream);
+            return Base64.getEncoder().encodeToString(imageData);
+        }
     }
 }
