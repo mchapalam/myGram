@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/app")
@@ -90,12 +91,26 @@ public class AppController {
 
 
     @CrossOrigin
-    @PostMapping("/user_all_posts")
+    @GetMapping("/user_all_posts/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public List<PostResponse> findPostsByUser(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertUserRequest userRequest){
-        log.info("Calling findPostsByUser {}", userRequest.getUsername());
+    public List<PostResponse> findPostsByUser(@AuthenticationPrincipal AppUserDetails userDetails,
+                                              @PathVariable UUID userId) throws IOException{
+        log.info("Calling findPostsByUser {}", userId);
 
-        return postService.findPostsByUser(userRequest.getUsername());
+        List<PostResponse> postResponses = postService.findPostsByUser(userId.toString())
+                .stream()
+                .map(post -> {
+                    try {
+                        post.setBase64ImageData(postService.getImageData(post.getFile()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return post;
+                })
+                .collect(Collectors.toList());
+
+        return postResponses;
     }
 }
 
