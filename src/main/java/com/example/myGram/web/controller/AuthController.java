@@ -27,14 +27,12 @@ public class AuthController {
     private final UserMapper userMapper;
     private final SecurityService securityService;
 
-    @CrossOrigin
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> authUser(@RequestBody LoginRequest loginRequest){
         log.info("Call sigin api");
         return ResponseEntity.ok(securityService.authUser(loginRequest));
     }
 
-    @CrossOrigin
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> authUser(@RequestBody CreateUserRequest createUserRequest){
         log.info("Call register api");
@@ -51,20 +49,17 @@ public class AuthController {
         return ResponseEntity.ok(securityService.authUser(loginRequest));
     }
 
-    @CrossOrigin
     @PostMapping("/refresh-token")
     public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenRequest request){
         log.info("Call refresh-token api");
         return ResponseEntity.ok(securityService.tokenRefresh(request));
     }
 
-    @CrossOrigin
     @GetMapping("/checkAuth")
     public ResponseEntity<UserForPostResponse> refreshToken(@AuthenticationPrincipal AppUserDetails appUserDetails){
         return ResponseEntity.ok(userService.findUserByUsername(appUserDetails.getUsername()));
     }
 
-    @CrossOrigin
     @PostMapping("/logout")
     public ResponseEntity<SimpleResponse> logoutUser(@AuthenticationPrincipal UserDetails userDetails){
         log.info("Call logout api");
