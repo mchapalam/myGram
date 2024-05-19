@@ -56,8 +56,7 @@ public class AppController {
 
     @CrossOrigin
     @GetMapping("/all_users_post")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public List<PostResponse> findByAllUserPost(@AuthenticationPrincipal AppUserDetails userDetails){
+    public List<PostResponse> findByAllUserPost(){
         log.info("Calling all post");
 
         return postService.findAll();
