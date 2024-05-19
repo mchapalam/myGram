@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/app")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 public class AppController {
     private final PostService postService;
     private final UserService userService;
