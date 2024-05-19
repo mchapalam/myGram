@@ -39,50 +39,30 @@ public class PostServiceImpl implements PostService {
     public List<PostResponse> findAll() {
         List<PostResponse> postResponses = postMapper.postListToResponseList(postRepository.findAll())
                 .stream()
-                .map(post -> {
-                    try {
-                        post.setBase64ImageData(getImageData(post.getFile()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    return post;
-                })
+                .map(this::convertPostToPostResponseWithImageData)
                 .collect(Collectors.toList());
 
         return postResponses;
     }
 
     @Override
-    public PostResponse create(UpsertPostRequest post, MultipartFile file)  {
+    public PostResponse create(UpsertPostRequest post, MultipartFile file) {
         Post tempPost = postMapper.requestToPost(post);
 
-        if (file != null && !file.isEmpty()){
-            File uploadDir = new File(uploadPath).getAbsoluteFile();
-
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFilename = uuidFile + "." + file.getOriginalFilename();
-
-            try {
-                File destinationFile = new File(uploadDir, resultFilename);
-                file.transferTo(destinationFile);
-            } catch (IOException e) {
-                throw new RuntimeException("Ошибка при сохранении файла", e);
-            }
-
+        if (file != null && !file.isEmpty()) {
+            String resultFilename = saveFile(file);
             tempPost.setFile(resultFilename);
         }
 
-        PostResponse postResponse = postMapper.postToResponse(postRepository.save(tempPost));
+        Post savedPost = postRepository.save(tempPost);
+        PostResponse postResponse = postMapper.postToResponse(savedPost);
 
-        try {
-            postResponse.setBase64ImageData(getImageData(tempPost.getFile()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (savedPost.getFile() != null) {
+            try {
+                postResponse.setBase64ImageData(getImageData(savedPost.getFile()));
+            } catch (IOException e) {
+                throw new RuntimeException("Ошибка при получении данных изображения", e);
+            }
         }
 
         return postResponse;
@@ -94,15 +74,7 @@ public class PostServiceImpl implements PostService {
 
         List<PostResponse> postResponses = postMapper.postListToResponseList(postRepository.getPostByUsername(userId))
                 .stream()
-                .map(post -> {
-                    try {
-                        post.setBase64ImageData(getImageData(post.getFile()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    return post;
-                })
+                .map(this::convertPostToPostResponseWithImageData)
                 .collect(Collectors.toList());
 
         return postResponses;
@@ -113,15 +85,7 @@ public class PostServiceImpl implements PostService {
 
         List<PostResponse> postResponses = postMapper.postListToResponseList(postRepository.getPostByUsername(id))
                 .stream()
-                .map(post -> {
-                    try {
-                        post.setBase64ImageData(getImageData(post.getFile()));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    return post;
-                })
+                .map(this::convertPostToPostResponseWithImageData)
                 .collect(Collectors.toList());
 
         return postResponses;
@@ -130,9 +94,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponse findPostById(UUID id) {
         return postRepository.findById(id)
-                .map(postMapper::postToResponse).get();
+                .map(postMapper::postToResponse).map(this::convertPostToPostResponseWithImageData).get();
     }
-    @Override
+
     public String getImageData(String fileName) throws IOException {
         Resource resource = new FileSystemResource(uploadPath + "/" + fileName);
 
@@ -144,5 +108,35 @@ public class PostServiceImpl implements PostService {
             byte[] imageData = StreamUtils.copyToByteArray(inputStream);
             return Base64.getEncoder().encodeToString(imageData);
         }
+    }
+
+    private PostResponse convertPostToPostResponseWithImageData(PostResponse post) {
+        try {
+            String base64ImageData = getImageData(post.getFile());
+            post.setBase64ImageData(base64ImageData);
+        } catch (IOException e) {
+            throw new RuntimeException("Error processing image data for post: " + post.getId(), e);
+        }
+        return post;
+    }
+
+    private String saveFile(MultipartFile file) {
+        File uploadDir = new File(uploadPath).getAbsoluteFile();
+
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        String uuidFile = UUID.randomUUID().toString();
+        String resultFilename = uuidFile + "." + file.getOriginalFilename();
+
+        try {
+            File destinationFile = new File(uploadDir, resultFilename);
+            file.transferTo(destinationFile);
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка при сохранении файла", e);
+        }
+
+        return resultFilename;
     }
 }

@@ -20,5 +20,4 @@ public interface PostService{
 
     List<PostResponse> findPostsByUserId(UUID id);
 
-    String getImageData(String fileName) throws IOException;
 }

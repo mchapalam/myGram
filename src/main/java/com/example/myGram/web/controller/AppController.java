@@ -30,15 +30,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class AppController {
-
-    private final Jackson2ObjectMapperBuilder mapperBuilder;
     private final PostService postService;
     private final UserService userService;
 
     @CrossOrigin
     @PostMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public UserForPostResponse userAccess(@AuthenticationPrincipal AppUserDetails userDetails, @RequestBody UpsertUserRequest userRequest){
+    public UserForPostResponse userAccess(@AuthenticationPrincipal AppUserDetails userDetails,
+                                          @RequestBody UpsertUserRequest userRequest){
         log.info("Call user {}", userRequest.getUsername());
         return userService.findUserByUsername(userRequest.getUsername());
     }
@@ -67,17 +66,11 @@ public class AppController {
     @CrossOrigin
     @GetMapping("/post/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('USER')")
-    public ResponseEntity<Object> findPostById(@AuthenticationPrincipal AppUserDetails userDetails,
-                                               @PathVariable UUID id) throws IOException {
+    public PostResponse findPostById(@AuthenticationPrincipal AppUserDetails userDetails,
+                                     @PathVariable UUID id) throws IOException {
         log.info("Calling post by id");
 
-        PostResponse postResponse = postService.findPostById(id);
-
-        String base64ImageData = postService.getImageData(postResponse.getFile());
-
-        postResponse.setBase64ImageData(base64ImageData);
-
-        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+        return postService.findPostById(id);
     }
 
     @CrossOrigin
