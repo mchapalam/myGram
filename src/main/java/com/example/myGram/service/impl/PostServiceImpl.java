@@ -85,7 +85,7 @@ public class PostServiceImpl implements PostService {
             throw new RuntimeException(e);
         }
 
-        return postMapper.postToResponse(postRepository.save(tempPost));
+        return postResponse;
     }
 
     @Override
