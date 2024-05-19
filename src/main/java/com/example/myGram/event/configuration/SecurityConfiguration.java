@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.util.List;
@@ -57,18 +58,15 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-
+    public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/v1/auth", configuration);
-        source.registerCorsConfiguration("/api/v1/app", configuration);
-        return source;
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     @Bean
