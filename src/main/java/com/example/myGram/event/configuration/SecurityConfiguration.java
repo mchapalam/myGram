@@ -34,11 +34,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final UserDetailsServiceImpl userDetailsService;
-
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
     private final JwtTokenFilter jwtTokenFilter;
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -89,12 +86,8 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(12);
     }
 
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
-
 }
